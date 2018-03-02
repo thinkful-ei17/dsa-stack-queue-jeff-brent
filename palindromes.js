@@ -43,32 +43,81 @@ function is_palindrome(string) {
 // Expected input: '3 * (4 + 1)' -> true
 // Wrong input: '2 + 2(2 * 3))' -> false
 
+// function matchParens(string) {
+//   string = string.toLowerCase().replace(/[^()]/g, ' ');
+//   const newStack = new stack();
+
+//   let currentIndex = 0;
+//   for (let i = 0; i < string.length; i++) {
+//     if (string[i] === '(') {
+//       newStack.push(string[i]);
+//       currentIndex = i;
+//     }
+//     else if (string[i] === ')') {
+//       if (newStack.top === null) {
+//         throw new Error('error at position ' + i);
+//       }
+//       newStack.pop();
+//     }
+//   }
+
+//   if (newStack.top !== null) {
+//     throw new Error('error at position ' + currentIndex);
+//   }
+//   return true;
+// }
+// console.log(matchParens('3 * (4 + 1)'));
+
+// ------------------------- Extension Exercise-----------------------
+
 function matchParens(string) {
-  string = string.toLowerCase().replace(/[^()]/g, ' ');
   const newStack = new stack();
 
-  let currentIndex = 0;
   for (let i = 0; i < string.length; i++) {
-    if (string[i] === '(') {
-      newStack.push(string[i]);
-      currentIndex = i;
-    }
-    else if (string[i] === ')') {
-      if (newStack.top === null) {
-        throw new Error('error at position ' + i);
+    switch(string[i]){
+    case '(':
+    case '{':
+    case '[':
+      newStack.push({
+        value: string[i],
+        location: i,
+      });
+      console.log('after push', JSON.stringify(newStack));
+      break;
+    case ')': 
+      if (newStack.top === null || newStack.pop().value !== '(') {
+        throw new Error(`Error at index: ${i}`);
       }
-      newStack.pop();
+      break;
+    case '}':
+      if (newStack.top === null || newStack.pop().value !== '{') {
+        throw new Error(`Error at index: ${i}`);
+      }
+      break;
+    case ']':
+      if (newStack.top === null || newStack.pop().value !== '[') {
+        throw new Error(`Error at index:${i} `);
+      }
+      console.log('after pop', JSON.stringify(newStack));
+      break; 
+    default :
+      break;
     }
   }
-
   if (newStack.top !== null) {
-    throw new Error('error at position ' + currentIndex);
+    throw new Error(`Error at index: ${newStack.pop().location}`);
   }
   return true;
 }
-//1. Replace everything but parens in a string
-//2. Iterate over the string length
-//3. When we hit a '(' -> push into newStack
-//4. When we hit a ')' -> pop from newStack
-console.log(matchParens('3 * (4 + 1)'));
 
+console.log(matchParens('( () () ) ( () () ]'));
+
+
+
+/*
+Extension exercise: Recognize three pairs of brackets: (), [], and {}. These must be correctly nested; "([)]" is incorrect, and should report an error at the ), stating that you were expecting a ] but found a ). If this is starting to look and sound very familiar, congratulations - you're beginning to write a simple language parser!
+
+Extension extension exercise: Also recognize two types of quote character: "" and ''. Inside quotes, brackets aren't counted at all - in fact, nothing is counted until you reach the corresponding close quote.
+*/
+
+// console.log(x('{', '}'));
