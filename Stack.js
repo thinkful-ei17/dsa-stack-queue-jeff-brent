@@ -57,4 +57,6 @@ const main = () => {
   console.log(display(test));
 };
 
-main();
+// main();
+
+module.exports = Stack;
